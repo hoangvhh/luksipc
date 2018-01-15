@@ -59,6 +59,7 @@
 :26	EC_CMDLINE_ARGUMENT_ERROR								Error with a parameter which was given on the command line
 :27	EC_CANNOT_GENERATE_WRITE_HANDLE							Error generating device mapper write handle
 :28	EC_PRNG_INITIALIZATION_FAILED							Initialization of PRNG failed
+:29 EC_CANNOT_OPEN_WRITE_DEVICE                             Error can not open device for write decrypt data
 */
 
 enum terminationCode_t {
@@ -90,7 +91,8 @@ enum terminationCode_t {
 	EC_CMDLINE_PARSING_ERROR = 25,
 	EC_CMDLINE_ARGUMENT_ERROR = 26,
 	EC_CANNOT_GENERATE_WRITE_HANDLE = 27,
-	EC_PRNG_INITIALIZATION_FAILED = 28
+	EC_PRNG_INITIALIZATION_FAILED = 28,
+    EC_CANNOT_OPEN_WRITE_DEVICE = 29
 };
 
 /*************** AUTO GENERATED SECTION FOLLOWS ***************/

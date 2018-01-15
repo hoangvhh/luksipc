@@ -48,6 +48,8 @@
 #include "exit.h"
 #include "random.h"
 
+#include "decrypt.h"
+
 #define staticassert(cond)				_Static_assert(cond, #cond)
 
 /* Assert that lseek(2) has 64-bit file offsets */
@@ -829,8 +831,14 @@ int main(int argc, char **argv) {
 		terminate(EC_PRNG_INITIALIZATION_FAILED);
 	}
 
-	/* Set loglevel to value given on command line */
-	setLogLevel(pgmParameters.logLevel);
+    /* Set loglevel to value given on command line */
+    setLogLevel(pgmParameters.logLevel);
+
+	/* Decrypt partition */
+	if (!pgmParameters.isEncrypt) {
+		decrypt(&pgmParameters);
+        return 0;
+	}
 
 	/* Check if all preconditions are satisfied */
 	checkPreconditions(&pgmParameters);

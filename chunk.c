@@ -82,7 +82,7 @@ ssize_t chunkWriteAt(const struct chunk *aChunk, int aFd, uint64_t aOffset) {
 	}
 	bytesWritten = write(aFd, aChunk->data, aChunk->used);
 	if (bytesWritten != aChunk->used) {
-		logmsg(LLVL_WARN, "Requested write of %d bytes unsuccessful (wrote %ld).\n", aChunk->used, bytesWritten);
+		logmsg(LLVL_WARN, "Requested write of %d bytes unsuccessful (wrote %ld).\n --- %d: %s\n", aChunk->used, bytesWritten, errno, strerror(errno));
 	}
 	return bytesWritten;
 }

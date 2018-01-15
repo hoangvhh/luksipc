@@ -44,6 +44,8 @@ static void defaultParameters(struct conversionParameters *aParams) {
 	aParams->logLevel = LLVL_INFO;
 	aParams->backupFile = "header_backup.img";
 	aParams->resumeFilename = "resume.bin";
+
+    aParams->isEncrypt = true;
 }
 
 static void syntax(char **argv, const char *aMessage, enum terminationCode_t aExitCode) {
@@ -191,13 +193,15 @@ void parseParameters(struct conversionParameters *aParams, int argc, char **argv
 		{ "development-ioerrors", 0, NULL, OPT_DEV_IOERRORS },
 		{ "development-ioerrorx", 0, NULL, 'h' },							/* Do not allow abbreviation of --development-ioerrors */
 #endif
+        { "encrypt", 1, NULL, 'e' },
+        { "passphrase", 1, NULL, 'a' },
 		{ "help", 0, NULL, 'h' },
 		{ 0 }
 	};
 	int character;
 
 	defaultParameters(aParams);
-	while ((character = getopt_long(argc, argv, "hb:d:l:k:p:c:", longOptions, NULL)) != -1) {
+	while ((character = getopt_long(argc, argv, "hb:d:l:k:p:c:e:a:", longOptions, NULL)) != -1) {
 		switch (character) {
 			case 'd':
 				aParams->rawDevice = optarg;
@@ -268,6 +272,15 @@ void parseParameters(struct conversionParameters *aParams, int argc, char **argv
 			case 'h':
 				syntax(argv, NULL, EC_SUCCESS);
 				break;
+
+            case 'e':
+                if (atoi(optarg) == 0)
+                    aParams->isEncrypt = false;
+                break;
+
+            case 'a':
+                aParams->passphrase = optarg;
+                break;
 
 			default:
 				fprintf(stderr, "Error: Lazy programmer caused bug in getopt parsing (character 0x%x = '%c').\n", character, character);

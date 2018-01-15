@@ -43,6 +43,9 @@ struct conversionParameters {
 	int logLevel;
 	bool reluksification;
 
+    bool isEncrypt;
+    const char *passphrase;
+
 #ifdef DEVELOPMENT
 	struct {
 		bool slowDown;					/* Simulate slow devices */
