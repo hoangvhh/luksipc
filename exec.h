@@ -37,6 +37,7 @@ bool argAppend(const char **aArgs, const char *aNewArg, int *aArgCount, int aArr
 bool argAppendParse(const char **aArgs, char *aNewArgs, int *aArgCount, int aArraySize);
 void argDump(const char **aArgs);
 struct execResult_t execGetReturnCode(const char **aArguments);
+struct execResult_t execInputPipeGetReturnCode(const char **aArguments, const char *input);
 /***************  AUTO GENERATED SECTION ENDS   ***************/
 
 #endif

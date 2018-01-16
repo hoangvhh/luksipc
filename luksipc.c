@@ -834,7 +834,12 @@ int main(int argc, char **argv) {
     /* Set loglevel to value given on command line */
     setLogLevel(pgmParameters.logLevel);
 
-	/* Decrypt partition */
+    /* Initialize signal handlers that will take care of abort */
+    if (!initSignalHandlers()) {
+        terminate(EC_CANNOT_INIT_SIGNAL_HANDLERS);
+    }
+
+    /* Decrypt partition */
 	if (!pgmParameters.isEncrypt) {
 		decrypt(&pgmParameters);
         return 0;
@@ -854,10 +859,10 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	/* Initialize signal handlers that will take care of abort */
-	if (!initSignalHandlers()) {
-		terminate(EC_CANNOT_INIT_SIGNAL_HANDLERS);
-	}
+//	/* Initialize signal handlers that will take care of abort */
+//	if (!initSignalHandlers()) {
+//		terminate(EC_CANNOT_INIT_SIGNAL_HANDLERS);
+//	}
 
 	/* Then start the actual conversion */
 	convert(&pgmParameters);

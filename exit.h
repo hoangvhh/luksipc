@@ -60,6 +60,7 @@
 :27	EC_CANNOT_GENERATE_WRITE_HANDLE							Error generating device mapper write handle
 :28	EC_PRNG_INITIALIZATION_FAILED							Initialization of PRNG failed
 :29 EC_CANNOT_OPEN_WRITE_DEVICE                             Error can not open device for write decrypt data
+:30 EC_CANNOT_OPEN_BACKUP_HEADER_FILE						Error can not open backup header file
 */
 
 enum terminationCode_t {
@@ -92,7 +93,8 @@ enum terminationCode_t {
 	EC_CMDLINE_ARGUMENT_ERROR = 26,
 	EC_CANNOT_GENERATE_WRITE_HANDLE = 27,
 	EC_PRNG_INITIALIZATION_FAILED = 28,
-    EC_CANNOT_OPEN_WRITE_DEVICE = 29
+    EC_CANNOT_OPEN_WRITE_DEVICE = 29,
+	EC_CANNOT_OPEN_BACKUP_HEADER_FILE = 30
 };
 
 /*************** AUTO GENERATED SECTION FOLLOWS ***************/

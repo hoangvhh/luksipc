@@ -194,4 +194,71 @@ struct execResult_t execGetReturnCode(const char **aArguments) {
 	return execResult;
 }
 
+struct execResult_t execInputPipeGetReturnCode(const char **aArguments, const char *input) {
+    struct execResult_t execResult;
+    char **argcopy = argCopy(aArguments);
+    pid_t pid;
+    int status;
 
+    int fd[2];
+    if (pipe(fd)) {
+        execResult.success = false;
+        execResult.returnCode = -1;
+        return execResult;
+    }
+
+    memset(&execResult, 0, sizeof(execResult));
+    execResult.success = true;
+
+    pid = fork();
+    if (pid == -1) {
+        perror("fork");
+        execResult.success = false;
+        return execResult;
+    }
+    if (pid > 0) {
+        char commandLineBuffer[256];
+
+        // Close input pipe
+        close(fd[0]);
+        // Send input to child process
+        write(fd[1], input, (strlen(input)));
+        close(fd[1]);
+
+        convertCommandLine(commandLineBuffer, sizeof(commandLineBuffer), aArguments);
+        logmsg(LLVL_DEBUG, "Subprocess [PID %d]: Will execute '%s'\n", pid, commandLineBuffer);
+    }
+    if (pid == 0) {
+        /* Child */
+        if (getLogLevel() < LLVL_DEBUG) {
+            /* Shut up the child if user did not request debug output */
+            close(1);
+            close(2);
+        }
+
+        // Close output pipe
+        close(fd[1]);
+        // Redirect message to stdin
+        dup2(fd[0], STDIN_FILENO);
+        close(fd[0]);
+
+        execvp(aArguments[0], argcopy);
+        perror("execvp");
+        logmsg(LLVL_ERROR, "Execution of %s in forked child process failed at execvp: %s\n", aArguments[0], strerror(errno));
+
+        /* Exec failed, terminate chExec failed, terminate child process
+         * (parent will catch this as the return code) */
+        exit(EXIT_FAILURE);
+    }
+
+    if (waitpid(pid, &status, 0) == (pid_t)-1) {
+        perror("waitpid");
+        execResult.success = false;
+        return execResult;
+    }
+
+    freeArgCopy(argcopy);
+    execResult.returnCode = WEXITSTATUS(status);
+    logmsg(LLVL_DEBUG, "Subprocess [PID %d]: %s returned %d\n", pid, aArguments[0], execResult.returnCode);
+    return execResult;
+}
